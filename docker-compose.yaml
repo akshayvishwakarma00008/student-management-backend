@@ -30,9 +30,9 @@ services:
       - .env
     depends_on:
       - backend
-  
+
   backend:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: project_name_backend_student_management

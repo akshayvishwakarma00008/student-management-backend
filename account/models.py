@@ -4,9 +4,9 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None):
-        print("password",password)
-        print("email",email)
-        print("name",name)
+        print("password", password)
+        print("email", email)
+        print("name", name)
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
-    
+
 
 class User(AbstractBaseUser):
     email = models.EmailField(

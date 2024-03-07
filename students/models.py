@@ -10,6 +10,7 @@ class Class(models.Model):
     def __str__(self):
         return self.class_name
 
+
 class Student(models.Model):
     id = models.AutoField(primary_key=True)
     fullname = models.CharField(max_length=100)
@@ -24,7 +25,7 @@ class Student(models.Model):
     pen_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     enrollment_date = models.DateField(default=datetime.now)
     academic_year = models.CharField(max_length=9, default="2023-24")
-    is_active = models.BooleanField(default=True,editable=True)
+    is_active = models.BooleanField(default=True, editable=True)
 
     def fees_paid(self):
         return self.total_fees_paid
@@ -34,34 +35,37 @@ class Student(models.Model):
 
     def __str__(self):
         return self.fullname
-    
+
     def save(self, *args, **kwargs):
         if not self.registrationNo:
             # Generate a unique registration number using a combination of prefix and UUID
-            prefix = 'REG'
+            prefix = "REG"
             user_prefix = self.fullname[:4].upper()
             unique_id = int(uuid.uuid4().int) % 100000
-            self.registrationNo = f'{prefix}-{user_prefix}-{unique_id}'
+            self.registrationNo = f"{prefix}-{user_prefix}-{unique_id}"
 
         if not self.academic_year:
             current_date = datetime.now()
-            if current_date.month >=3:
-                self.academic_year = f'{current_date.year}-{str(current_date.year+1)[2:]}'
+            if current_date.month >= 3:
+                self.academic_year = (
+                    f"{current_date.year}-{str(current_date.year+1)[2:]}"
+                )
             else:
-                self.academic_year = f'{current_date.year - 1}-{str(current_date.year)[2:]}'
+                self.academic_year = (
+                    f"{current_date.year - 1}-{str(current_date.year)[2:]}"
+                )
         super().save(*args, **kwargs)
-    
 
 
 class FeePayment(models.Model):
-    PAYMENT_TYPES =[
-        ('monthly','monthly'),
-        ('3months','3 months'),
-        ('6months','6 months'),
-        ('yearly', 'yearly'),
+    PAYMENT_TYPES = [
+        ("monthly", "monthly"),
+        ("3months", "3 months"),
+        ("6months", "6 months"),
+        ("yearly", "yearly"),
     ]
 
-    student =  models.ForeignKey(Student,on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     payment_date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_type = models.CharField(max_length=10, choices=PAYMENT_TYPES)
@@ -69,8 +73,11 @@ class FeePayment(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.student.total_fees_paid += self.amount
-        self.student.pen_fees = self.student.class_enrolled.total_fees - self.student.total_fees_paid
+        self.student.pen_fees = (
+            self.student.class_enrolled.total_fees - self.student.total_fees_paid
+        )
         self.student.save()
+
 
 class StudentEnrollmentHistory(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

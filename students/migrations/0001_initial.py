@@ -8,42 +8,88 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Class',
+            name="Class",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cla_name', models.CharField(max_length=50)),
-                ('total_fees', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("cla_name", models.CharField(max_length=50)),
+                (
+                    "total_fees",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Student',
+            name="Student",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('fullname', models.CharField(max_length=100)),
-                ('age', models.IntegerField()),
-                ('registrationNo', models.CharField(max_length=100)),
-                ('email', models.CharField(max_length=100)),
-                ('course', models.CharField(max_length=50)),
-                ('phoneNumber', models.IntegerField()),
-                ('address', models.TextField()),
-                ('total_fees_paid', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('pen_fees', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('class_enrolled', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='students.class')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("fullname", models.CharField(max_length=100)),
+                ("age", models.IntegerField()),
+                ("registrationNo", models.CharField(max_length=100)),
+                ("email", models.CharField(max_length=100)),
+                ("course", models.CharField(max_length=50)),
+                ("phoneNumber", models.IntegerField()),
+                ("address", models.TextField()),
+                (
+                    "total_fees_paid",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                (
+                    "pen_fees",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                (
+                    "class_enrolled",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="students.class"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='FeePayment',
+            name="FeePayment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('payment_date', models.DateField()),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('payment_type', models.CharField(choices=[('monthly', 'monthly'), ('3months', '3 months'), ('6months', '6 months'), ('yearly', 'yearly')], max_length=10)),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='students.student')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("payment_date", models.DateField()),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "payment_type",
+                    models.CharField(
+                        choices=[
+                            ("monthly", "monthly"),
+                            ("3months", "3 months"),
+                            ("6months", "6 months"),
+                            ("yearly", "yearly"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "student",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="students.student",
+                    ),
+                ),
             ],
         ),
     ]

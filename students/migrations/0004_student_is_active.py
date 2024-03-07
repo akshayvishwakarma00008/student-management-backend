@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('students', '0003_student_academic_year_student_enrollment_date_and_more'),
+        ("students", "0003_student_academic_year_student_enrollment_date_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='student',
-            name='is_active',
+            model_name="student",
+            name="is_active",
             field=models.BooleanField(default=True),
         ),
     ]

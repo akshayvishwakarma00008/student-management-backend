@@ -8,34 +8,59 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('students', '0002_rename_cla_name_class_class_name'),
+        ("students", "0002_rename_cla_name_class_class_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='student',
-            name='academic_year',
-            field=models.CharField(default='2023-24', max_length=9),
+            model_name="student",
+            name="academic_year",
+            field=models.CharField(default="2023-24", max_length=9),
         ),
         migrations.AddField(
-            model_name='student',
-            name='enrollment_date',
+            model_name="student",
+            name="enrollment_date",
             field=models.DateField(default=datetime.datetime.now),
         ),
         migrations.AlterField(
-            model_name='student',
-            name='registrationNo',
+            model_name="student",
+            name="registrationNo",
             field=models.CharField(editable=False, max_length=100, unique=True),
         ),
         migrations.CreateModel(
-            name='StudentEnrollmentHistory',
+            name="StudentEnrollmentHistory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('academic_year', models.CharField(max_length=9)),
-                ('total_fees_paid', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('pen_fees', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('class_enrolled', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='students.class')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='students.student')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("academic_year", models.CharField(max_length=9)),
+                (
+                    "total_fees_paid",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                (
+                    "pen_fees",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                (
+                    "class_enrolled",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="students.class"
+                    ),
+                ),
+                (
+                    "student",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="students.student",
+                    ),
+                ),
             ],
         ),
     ]
