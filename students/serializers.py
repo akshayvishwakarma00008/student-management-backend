@@ -5,21 +5,17 @@ import uuid
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    total_fees = serializers.SerializerMethodField()
+
     class Meta:
         model = Student
-        fields = [
-            "fullname",
-            "age",
-            "registrationNo",
-            "email",
-            "course",
-            "phoneNumber",
-            "address",
-            "total_fees_paid",
-            "pen_fees",
-            "class_enrolled",
-            "academic_year",
-        ]
+        fields = "__all__"
+
+    def get_total_fees(self, obj):
+        """Fetch total_fees from related class_enrolled"""
+        if obj.class_enrolled:
+            return obj.class_enrolled.total_fees
+        return 0
 
 
 class FeePaymentSerializer(serializers.ModelSerializer):

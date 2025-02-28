@@ -95,7 +95,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": RDS_NAME,
-        "HOST": RDS_HOST,
+        # "HOST": RDS_HOST,
         "USER": RDS_USERNAME,
         "PASSWORD": RDS_PASSWORD,
         "PORT": RDS_DB_PORT,
