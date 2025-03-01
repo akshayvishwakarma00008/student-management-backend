@@ -21,7 +21,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class FeePaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeePayment
-        fields = ["payment_date", "amount", "payment_type", "student"]
+        fields = "__all__"
 
     def validate(self, attrs):
         date = attrs.get("payment_date")

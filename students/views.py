@@ -10,7 +10,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
 
-from .models import Student, FeePayment
+from .models import Student, FeePayment, Class
+
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet
 
 # Create your views here.
 
@@ -137,3 +145,81 @@ def increment_academic_year(academic_year):
     new_year = str(int(current_year) + 1)
     new_suffix = str(int(current_suffix) + 1)
     return f"{new_year}-{new_suffix.zfill(2)}"
+
+
+def generate_receipt_pdf(request, studentId, paymentId):
+    student = Student.objects.get(id=studentId)
+    payment = FeePayment.objects.get(id=paymentId)
+
+    response = HttpResponse(content_type="application/pdf")
+    response[
+        "Content-Disposition"
+    ] = f'attachment; filename="recepit_of_payment_{student.fullname}_{payment.id}.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    # Institution Name (Title)
+    p.setFont("Helvetica-Bold", 18)
+    p.drawCentredString(width / 2, height - 60, "🏫 ABC Institution")
+
+    # Address
+    p.setFont("Helvetica", 12)
+    p.drawCentredString(width / 2, height - 80, "123 Main Street, City, Country")
+    p.line(50, height - 90, width - 50, height - 90)  # Divider line
+
+    # Receipt Title
+    p.setFont("Helvetica-Bold", 14)
+    p.drawCentredString(width / 2, height - 120, "Payment Receipt")
+
+    # Receipt Table Data
+    receipt_data = [
+        ["Student Name:", student.fullname],
+        ["Receipt No:", f"#{payment.id}"],
+        ["Reg No:", student.registrationNo],
+        ["Class:", student.class_enrolled.class_name],
+        ["Date of Payment:", str(payment.payment_date)],
+        ["Total Fees:", f"${student.class_enrolled.total_fees}"],
+        ["Paid Fees:", f"${payment.amount}"],
+    ]
+
+    # Create the table with appropriate column widths
+    table = Table(receipt_data, colWidths=[200, 300])
+
+    # Styling the table
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+                ("TEXTCOLOR", (0, 0), (-1, -1), colors.black),
+                ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+                ("FONTSIZE", (0, 0), (-1, -1), 12),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
+                ("LEFTPADDING", (0, 0), (-1, -1), 15),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 15),
+            ]
+        )
+    )
+
+    # Positioning the table nicely on the page
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 70, height - 300)
+
+    # Footer message
+    p.setFont("Helvetica-Oblique", 12)
+    p.drawCentredString(width / 2, height - 350, "Thank you for your payment!")
+
+    # Signature section
+    p.setFont("Helvetica", 10)
+    p.drawString(50, height - 400, "Authorized Signature:")
+    p.line(180, height - 402, 350, height - 402)
+
+    # Generate PDF
+    p.showPage()
+    p.save()
+
+    return response
