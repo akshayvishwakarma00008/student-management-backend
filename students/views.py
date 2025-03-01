@@ -40,7 +40,7 @@ class StudentView(APIView):
             data["fee_payments"] = fee_serializer.data
             return Response(data)
         try:
-            student = Student.objects.all().order_by("id")
+            student = Student.objects.all().order_by("-id")
             serializer = StudentSerializer(student, many=True)
 
             return Response(serializer.data)
