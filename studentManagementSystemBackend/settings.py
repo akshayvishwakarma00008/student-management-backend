@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,17 +91,20 @@ RDS_PASSWORD = os.environ.get("MYSQL_ROOT_PASSWORD")
 RDS_HOST = os.environ.get("DB_HOST")
 RDS_DB_PORT = os.environ.get("DB_PORT")
 
+# local
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": RDS_NAME,
+#         # "HOST": RDS_HOST,
+#         "USER": RDS_USERNAME,
+#         "PASSWORD": RDS_PASSWORD,
+#         "PORT": RDS_DB_PORT,
+#     }
+# }
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": RDS_NAME,
-        # "HOST": RDS_HOST,
-        "USER": RDS_USERNAME,
-        "PASSWORD": RDS_PASSWORD,
-        "PORT": RDS_DB_PORT,
-    }
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
 
 
 # Password validation
@@ -129,7 +133,9 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173",
     "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
 ]
 
 from datetime import timedelta
