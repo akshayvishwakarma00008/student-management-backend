@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 import uuid
+from django.core.validators import RegexValidator
 
 
 class Class(models.Model):
@@ -19,7 +20,12 @@ class Student(models.Model):
     registrationNo = models.CharField(max_length=100, unique=True, editable=False)
     email = models.CharField(max_length=100)
     course = models.CharField(max_length=50)
-    phoneNumber = models.IntegerField()
+    phoneNumber = models.CharField(
+        max_length=15,
+        validators=[
+            RegexValidator(regex=r"^\d{10,15}$", message="Enter a valid phone number.")
+        ],
+    )
     address = models.TextField()
     total_fees_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     pen_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)

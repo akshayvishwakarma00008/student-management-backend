@@ -19,6 +19,7 @@ from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
+from rest_framework import status
 
 # Create your views here.
 
@@ -97,9 +98,12 @@ class FeePaymentView(APIView):
         serialize = FeePaymentSerializer(data=data)
 
         if serialize.is_valid(raise_exception=True):
-            serialize.save()
-            return JsonResponse("Fee Record Captured", safe=False)
-        return JsonResponse("failed to insert", safe=False)
+            fee_record = serialize.save()
+            return JsonResponse(serialize.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(
+            {"error": "Failed to insert", "details": serialize.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class UpdateAcadamicYearView(APIView):
