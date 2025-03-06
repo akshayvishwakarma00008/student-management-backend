@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Student, FeePayment, StudentEnrollmentHistory
+from .models import Student, FeePayment, StudentEnrollmentHistory, Class
 from django.utils import timezone
 import uuid
 
@@ -44,3 +44,9 @@ class StudentEnrollmentHistorySerializer(serializers.ModelSerializer):
             "class_enrolled",
             "student",
         ]
+
+
+class ClassViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Class
+        fields = "__all__"

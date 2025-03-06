@@ -6,6 +6,7 @@ from .views import (
     FeePaymentView,
     UpdateAcadamicYearView,
     generate_receipt_pdf,
+    classView,
 )
 
 urlpatterns = [
@@ -19,4 +20,6 @@ urlpatterns = [
         generate_receipt_pdf,
         name="generate_receipt",
     ),
+    path("class/", classView.as_view()),
+    path("class/<int:pk>/", classView.as_view()),
 ]

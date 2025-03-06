@@ -4,6 +4,7 @@ from .serializers import (
     StudentSerializer,
     FeePaymentSerializer,
     StudentEnrollmentHistorySerializer,
+    ClassViewSerializer,
 )
 from django.http.response import JsonResponse
 from rest_framework.response import Response
@@ -227,3 +228,39 @@ def generate_receipt_pdf(request, studentId, paymentId):
     p.save()
 
     return response
+
+
+class classView(APIView):
+    def get(self, request):
+        classInfo = Class.objects.all()
+        serialize = ClassViewSerializer(classInfo, many=True)
+        return Response(serialize.data)
+
+    def post(self, request):
+        data = request.data
+        serialize = ClassViewSerializer(data=data)
+
+        if serialize.is_valid(raise_exception=True):
+            class_record = serialize.save()
+            return JsonResponse(serialize.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(
+            {"error": "Failed to insert", "details": serialize.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    def put(self, request, pk=None):
+        try:
+            class_instance = Class.objects.get(pk=pk)
+        except Class.DoesNotExist:
+            return Response(
+                {"error": "Class not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serialize = ClassViewSerializer(class_instance, data=request.data, partial=True)
+        if serialize.is_valid(raise_exception=True):
+            serialize.save()
+            return Response(serialize.data, status=status.HTTP_200_OK)
+        return Response(
+            {"error": "Update failed", "details": serialize.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
