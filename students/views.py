@@ -108,7 +108,7 @@ class FeePaymentView(APIView):
 
 
 class UpdateAcadamicYearView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:
