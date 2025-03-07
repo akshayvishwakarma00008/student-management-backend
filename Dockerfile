@@ -19,4 +19,7 @@ RUN pip install -r requirements.txt
 COPY . /app/
 
 # Command to start services
-CMD ["sh", "-c", "service cron start; python manage.py runserver 0.0.0.0:8000"]
+# CMD ["sh", "-c", "service cron start; python manage.py runserver 0.0.0.0:8000"]
+
+# Add cron job execution logic
+CMD ["sh", "-c", "if [ \"$RUN_CRON\" = \"true\" ]; then python manage.py runcrons; else python manage.py runserver 0.0.0.0:8000; fi"]
