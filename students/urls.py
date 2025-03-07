@@ -7,6 +7,7 @@ from .views import (
     UpdateAcadamicYearView,
     generate_receipt_pdf,
     classView,
+    run_cron_job,
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     ),
     path("class/", classView.as_view()),
     path("class/<int:pk>/", classView.as_view()),
+    path("run-cron/", run_cron_job, name="run_cron_job"),
 ]

@@ -264,3 +264,7 @@ class classView(APIView):
             {"error": "Update failed", "details": serialize.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+def run_cron_job(request):
+    return JsonResponse({"message": "Cron job triggered successfully"})
