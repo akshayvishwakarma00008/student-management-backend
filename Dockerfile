@@ -22,4 +22,4 @@ COPY . /app/
 # CMD ["sh", "-c", "service cron start; python manage.py runserver 0.0.0.0:8000"]
 
 # Add cron job execution logic
-CMD ["sh", "-c", "if [ \"$RUN_CRON\" = \"true\" ]; then python manage.py cron; else python manage.py runserver 0.0.0.0:8000; fi"]
+CMD ["sh", "-c", "if [ \"$RUN_CRON\" = \"true\" ]; then service cron start; else python manage.py runserver 0.0.0.0:8000; fi"]
