@@ -108,6 +108,8 @@ class FeePaymentView(APIView):
 
 
 class UpdateAcadamicYearView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         try:
             with transaction.atomic():
